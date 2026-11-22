@@ -1,0 +1,22 @@
+{
+  "name": "kygu-app",
+  "version": "1.0.0",
+  "description": "KyGU (Know Your GU) — Aplikasi Edukasi Kesehatan & Pemantauan Mandiri Sistem Genitourinaria",
+  "main": "index.html",
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File server.ps1",
+    "test": "powershell -ExecutionPolicy Bypass -File build.ps1 -TestOnly",
+    "build": "powershell -ExecutionPolicy Bypass -File build.ps1"
+  },
+  "keywords": [
+    "kygu",
+    "genitourinaria",
+    "nefrologi",
+    "urologi",
+    "kesehatan",
+    "edukasi-medis",
+    "pwa"
+  ],
+  "author": "Google DeepMind / KyGU Medical Team",
+  "license": "MIT"
+}

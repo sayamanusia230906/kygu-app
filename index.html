@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KyGU — Know Your GU | Aplikasi Edukasi Kesehatan & Pemantauan Sistem Genitourinaria</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#0A2E5C">
+  <meta name="description" content="Aplikasi Edukasi Kesehatan & Pemantauan Mandiri Sistem Genitourinaria (GU) untuk masyarakat umum dan mahasiswa kesehatan/kedokteran.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KyGU">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
+  
+  <!-- Google Fonts (loaded here for reliable Vercel/CDN delivery) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon / Touch Icon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+</head>
+<body>
+
+  <!-- TOP VIEWPORT CONTROL BAR (Mode Tampilan HP vs Fullscreen) -->
+  <header class="viewport-control-bar">
+    <div class="viewport-info">
+      <span>📱 <strong>KyGU Mobile Experience</strong></span>
+      <span class="viewport-badge">v1.0 Ready</span>
+    </div>
+    <div class="viewport-toggles">
+      <button class="view-btn active" id="view-phone-btn">📱 Tampilan HP</button>
+      <button class="view-btn" id="view-full-btn">💻 Layar Penuh</button>
+    </div>
+  </header>
+
+  <!-- CONFETTI CELEBRATION CONTAINER -->
+  <div id="confetti-container" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999;"></div>
+
+  <!-- SMARTPHONE DEVICE FRAME CONTAINER -->
+  <div class="mobile-device-shell" id="mobile-device-shell">
+
+    <!-- Phone Notch & Sensors -->
+    <div class="phone-notch"></div>
+
+    <!-- Phone Status Bar -->
+    <div class="phone-status-bar">
+      <span>09:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <span>📶 5G</span>
+        <span>🔋 100%</span>
+      </div>
+    </div>
+
+    <!-- MAIN APP SCREEN VIEWPORT -->
+    <main class="app-screen-viewport">
+
+      <!-- ================= SPLASH SCREEN ================= -->
+      <section class="splash-screen-screen" id="splash-screen">
+        <div class="splash-logo-symbol">🩺</div>
+        <div class="brand-logo-container splash-title-brand">
+          <span class="logo-ky">Ky</span>
+          <span class="logo-gu">GU</span>
+        </div>
+        <p class="splash-subtitle">Know Your Genitourinary System<br>Edukasi & Pemantauan Mandiri Ginjal & Saluran Kemih</p>
+        <div class="splash-progress-track">
+          <div class="splash-progress-bar" id="splash-bar"></div>
+        </div>
+        <div style="margin-top: 24px; font-size: 12px; color: var(--text-muted); cursor: pointer;" onclick="document.getElementById('splash-screen').classList.add('hidden');">
+          Ketuk untuk mulai jelajah ➔
+        </div>
+      </section>
+
+      <!-- ================= CLEAN APP HEADER ================= -->
+      <!-- STRICTLY NO HAMBURGER MENU & NO SETTINGS ICON -->
+      <header class="clean-app-header">
+        <div class="brand-logo-container">
+          <span class="brand-logo-text">
+            <span class="logo-ky">Ky</span><span class="logo-gu">GU</span>
+          </span>
+          <span class="brand-subtext">• Know your GU</span>
+        </div>
+        <button class="notification-bell-btn btn-bounce" id="btn-notification-bell" title="Pemberitahuan & Notifikasi">
+          <span>🔔</span>
+          <span class="bell-badge-dot"></span>
+        </button>
+      </header>
+
+      <!-- ================= TAB 1: HOME (BERANDA) ================= -->
+      <div class="tab-page-container tab-view-pane" id="tab-pane-home">
+        
+        <!-- Global Search Bar -->
+        <div class="global-search-container">
+          <div class="search-input-box">
+            <span class="search-icon-orange">🔍</span>
+            <input type="text" class="search-input-field" id="global-search-input" placeholder="Cari materi GU, penyakit, atau kalkulator...">
+          </div>
+        </div>
+        <!-- Live Search Results Dropdown -->
+        <div class="search-results-drawer" id="search-results-drawer"></div>
+
+        <!-- Home Main Cards Body -->
+        <div class="home-content-body">
+
+          <!-- KARTU UTAMA 1: BLADDER DIARY (HARIAN) - LATAR ORANYE HANGAT #FFA000 -->
+          <article class="bladder-diary-card">
+            <div class="card-top-header">
+              <h2 class="card-main-title">
+                <span>📅</span> Bladder Diary (Harian)
+              </h2>
+              <span class="card-date-badge" id="diary-date-badge">Hari Ini</span>
+            </div>
+
+            <!-- Circular Liquid Progress with Time Cycle Icons -->
+            <div class="circular-progress-wrap">
+              <div class="time-cycle-ring">
+                <!-- SVG Circular Orbit Track -->
+                <svg class="cycle-orbit-svg" viewBox="0 0 220 220">
+                  <!-- Circular dashed guide track without directional arrows -->
+                  <circle cx="110" cy="110" r="92" fill="none" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.8" stroke-dasharray="5 4" />
+                </svg>
+
+                <!-- Cycle Node 1: Matahari Bersinar (Siang Hari - Top) -->
+                <div class="cycle-node cycle-sun-top" title="Siang Hari: Matahari Penuh">
+                  <svg viewBox="0 0 32 32" width="22" height="22">
+                    <circle cx="16" cy="16" r="6" fill="#F57C00" />
+                    <g stroke="#F57C00" stroke-width="2" stroke-linecap="round">
+                      <line x1="16" y1="3" x2="16" y2="7" />
+                      <line x1="16" y1="25" x2="16" y2="29" />
+                      <line x1="3" y1="16" x2="7" y2="16" />
+                      <line x1="25" y1="16" x2="29" y2="16" />
+                      <line x1="6.8" y1="6.8" x2="9.6" y2="9.6" />
+                      <line x1="22.4" y1="22.4" x2="25.2" y2="25.2" />
+                      <line x1="6.8" y1="25.2" x2="9.6" y2="22.4" />
+                      <line x1="22.4" y1="9.6" x2="25.2" y2="6.8" />
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Cycle Node 2: Bulan Sabit (Malam Hari - Right) -->
+                <div class="cycle-node cycle-moon-right" title="Malam Hari: Bulan Sabit">
+                  <svg viewBox="0 0 32 32" width="20" height="20">
+                    <path d="M15 5 C21 7 25 12 24 19 C23 25 17 29 11 28 C9 28 7 27 6 26 C13 27 20 22 19 14 C18 9 14 6 11 5 C12.3 5 13.7 5 15 5 Z" fill="#F57C00" />
+                  </svg>
+                </div>
+
+                <!-- Cycle Node 3: Matahari Terbit (Pagi Hari - Left) -->
+                <div class="cycle-node cycle-sunrise-left" title="Pagi Hari: Matahari Terbit">
+                  <svg viewBox="0 0 32 32" width="22" height="22">
+                    <path d="M9 17 A7 7 0 0 1 23 17 Z" fill="#F57C00" />
+                    <line x1="4" y1="19" x2="28" y2="19" stroke="#F57C00" stroke-width="2" stroke-linecap="round" />
+                    <line x1="7" y1="23" x2="25" y2="23" stroke="#F57C00" stroke-width="1.5" stroke-linecap="round" />
+                    <g stroke="#F57C00" stroke-width="1.8" stroke-linecap="round">
+                      <line x1="16" y1="5" x2="16" y2="8" />
+                      <line x1="8.5" y1="8.5" x2="10.8" y2="10.8" />
+                      <line x1="23.5" y1="8.5" x2="21.2" y2="10.8" />
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Liquid Wave Animated Circle -->
+                <div class="liquid-circle-container">
+                  <canvas class="liquid-wave-canvas" id="liquid-wave-canvas"></canvas>
+                  <div class="liquid-inner-metrics">
+                    <div class="fluid-ratio-label" id="bladder-fluid-ratio">1.250 / 2.000 ml</div>
+                    <div class="fluid-sub-label" id="bladder-cups-ratio">5 / 8 Gelas</div>
+                    <div class="urination-count-chip" id="bladder-bak-count">4x BAK Hari Ini</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row of Side-by-Side Action Buttons (Deep Orange #F57C00) -->
+            <div class="diary-actions-row">
+              <button class="kygu-btn btn-orange-deep btn-bounce" id="btn-log-minum">
+                <span>➕</span> Log Minum +
+              </button>
+              <button class="kygu-btn btn-orange-deep btn-bounce" id="btn-log-bak">
+                <span>🚽</span> Log Berkemih
+              </button>
+            </div>
+
+            <!-- Full-Width White Button: Cek Warna Urin -->
+            <button class="kygu-btn btn-full-white btn-bounce" id="btn-cek-warna-urin">
+              <span>🌈</span> Cek Warna Urin
+            </button>
+          </article>
+
+          <!-- KARTU EDUKASI 2: TODAY FUN FACT DISESUAIKAN - LATAR BIRU NAVY #0A2E5C -->
+          <article class="funfact-card">
+            <div class="funfact-left">
+              <div class="funfact-tag">Fakta Medis GU Hari Ini</div>
+              <h3 class="funfact-title" id="funfact-title-text">Penyaring Raksasa Tubuh</h3>
+              <p class="funfact-snippet" id="funfact-desc-text">
+                Ginjal menyaring 180 liter plasma darah setiap hari, namun 99% diserap kembali!
+              </p>
+            </div>
+            <div class="funfact-right">
+              <div class="animated-bulb-icon">💡</div>
+              <button class="btn-refresh-fact btn-bounce" id="btn-refresh-fact">Acak 🔄</button>
+            </div>
+          </article>
+
+          <!-- KARTU FITUR MEDIS 3: KALKULATOR KLINIS - LATAR ORANYE TUA #F57C00 -->
+          <article class="calculator-card-banner btn-bounce" id="btn-open-calculators">
+            <div class="calc-banner-left">
+              <h3 class="calc-banner-title">Kalkulator Klinis</h3>
+              <p class="calc-banner-sub">eGFR, Urine Output, Target Cairan & Skor IPSS Prostat</p>
+            </div>
+            <div class="calc-banner-icon">🧮</div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- ================= TAB 2: LEARN (PUSAT MATERI) ================= -->
+      <div class="tab-page-container tab-view-pane" id="tab-pane-learn" style="display: none;">
+        
+        <!-- Learn Header -->
+        <header class="learn-header-card">
+          <div>
+            <h2 class="learn-header-title">Pusat Materi & Pembelajaran</h2>
+            <p class="learn-header-sub">Anatomi Medis, Fisiologi Filtrasi & Panduan Penyakit GU</p>
+          </div>
+          <div class="learn-anatomy-banner-art">🔬</div>
+        </header>
+
+        <!-- Search Bar within Learn -->
+        <div class="global-search-container" style="padding-top: 10px;">
+          <div class="search-input-box">
+            <span class="search-icon-orange">🔍</span>
+            <input type="text" class="search-input-field" placeholder="Filter topik anatomi atau patologi..." oninput="
+              const val = this.value.toLowerCase();
+              document.querySelectorAll('.category-card-btn').forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(val) ? 'flex' : 'none';
+              });
+            ">
+          </div>
+        </div>
+
+        <!-- 3D ANATOMY INTERACTIVE VIEWER BOX -->
+        <section class="anatomy-3d-box-wrapper">
+          <div class="viewer-top-toolbar">
+            <div class="viewer-label">
+              <span>🩺</span> Visual Anatomi 3D Interaktif
+            </div>
+            <div class="viewer-actions">
+              <select class="viewer-mini-btn" id="select-3d-organ">
+                <option value="kidney">Ginjal (Renal)</option>
+                <option value="nephron">Nefron & Glomerulus</option>
+                <option value="bladder">Kandung Kemih</option>
+                <option value="prostate">Prostat & Uretra</option>
+              </select>
+              <button class="viewer-mini-btn" id="btn-3d-reset">Reset</button>
+              <button class="viewer-mini-btn" id="btn-3d-autorotate">🔄 Putar: ON</button>
+            </div>
+          </div>
+
+          <div class="canvas-viewport-frame" id="canvas-viewport-frame">
+            <canvas id="anatomy-3d-canvas"></canvas>
+          </div>
+
+          <div class="viewer-helper-hint">
+            👆 <strong>Interaksi 3D:</strong> Geser jari/mouse untuk putar 360°, scroll untuk zoom, dan ketuk pin hotspot untuk baca fungsi medis!
+          </div>
+        </section>
+
+        <!-- Categories List View -->
+        <div id="learn-modules-view">
+          <div class="learn-category-list" id="learn-category-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Module Detail View (Hidden by default, shown when category clicked) -->
+        <div id="learn-detail-view" style="display: none;">
+          <div style="padding: 12px 18px 0; display:flex; align-items:center; gap:10px;">
+            <button class="kygu-btn secondary-btn btn-bounce" id="btn-back-learn-list" style="padding: 6px 12px; font-size:12px;">
+              ⬅️ Kembali ke Daftar Modul
+            </button>
+          </div>
+
+          <div style="padding: 10px 18px 0;">
+            <h3 id="detail-module-title" style="color:var(--primary-navy); font-size:18px; font-weight:800;"></h3>
+            <p id="detail-module-sub" style="color:var(--text-secondary); font-size:12px; margin-top:2px;"></p>
+          </div>
+
+          <!-- Dual Tabs: Normal vs Penyakit -->
+          <div class="module-tab-segmented">
+            <button class="mod-tab-btn active" id="mod-tab-normal">
+              🌿 Kondisi Fisiologis Normal
+            </button>
+            <button class="mod-tab-btn" id="mod-tab-pathology">
+              ⚠️ Kondisi Patologis (Penyakit)
+            </button>
+          </div>
+
+          <div class="module-tab-content-pane">
+            <div id="detail-pane-normal"></div>
+            <div id="detail-pane-pathology" style="display: none;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 3: PRACTICE (SOAL LATIHAN & GAMES) ================= -->
+      <div class="tab-page-container tab-view-pane" id="tab-pane-practice" style="display: none;">
+        
+        <!-- Practice Header with Gamification -->
+        <header class="practice-header-card">
+          <div class="practice-title-row">
+            <div>
+              <h2 class="practice-main-title">Soal Latihan dan Games</h2>
+              <p style="font-size:12px; color:#93C5FD; margin-top:2px;">Uji kompetensi medis & evaluasi klinis interaktif</p>
+            </div>
+            <div class="runner-animated-icon">🏃‍♂️</div>
+          </div>
+
+          <!-- Two Status Cards: Progress & Score -->
+          <div class="practice-stats-grid">
+            <div class="stat-box-card">
+              <div class="stat-box-left">
+                <span class="stat-box-title">Your Progress</span>
+                <span class="stat-box-val" id="practice-progress-val">24% (14/60)</span>
+              </div>
+              <div class="stat-box-accent-block">📊</div>
+            </div>
+
+            <div class="stat-box-card">
+              <div class="stat-box-left">
+                <span class="stat-box-title">Score</span>
+                <span class="stat-box-val" id="practice-score-val">1.450 Pts</span>
+              </div>
+              <div class="stat-box-accent-block">🏆</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Two Columns Layout: Latihan Soal (Left) & Games (Right) -->
+        <div class="practice-columns-grid">
+
+          <!-- Kolom Kiri: Latihan Soal (Easy, Medium, Hard - Masing-masing tepat 20 soal) -->
+          <div class="practice-column">
+            <h3 class="practice-column-title">📝 Latihan Soal</h3>
+            
+            <button class="practice-action-btn btn-bounce" id="btn-quiz-easy">
+              <span>Level Easy</span>
+              <span class="btn-sub-caption">20 Soal • Anatomi & Konsep Dasar</span>
+            </button>
+
+            <button class="practice-action-btn btn-bounce" id="btn-quiz-medium">
+              <span>Level Medium</span>
+              <span class="btn-sub-caption">20 Soal • Fisiologi & LFG Guyton</span>
+            </button>
+
+            <button class="practice-action-btn btn-bounce" id="btn-quiz-hard">
+              <span>Level Hard</span>
+              <span class="btn-sub-caption">20 Soal • Patofisiologi & Kasus Medis</span>
+            </button>
+          </div>
+
+          <!-- Kolom Kanan: Games (2 Pilihan Mini-Games Edukatif) -->
+          <div class="practice-column">
+            <h3 class="practice-column-title">🎮 Games Medis</h3>
+            
+            <button class="practice-action-btn btn-bounce" id="btn-game-puzzle" style="background:#0284C7;">
+              <span>🧩 Uro-Puzzle</span>
+              <span class="btn-sub-caption">Rakit Anatomi GU Cepat (60s)</span>
+            </button>
+
+            <button class="practice-action-btn btn-bounce" id="btn-game-rush" style="background:#10B981;">
+              <span>⚡ Clinic Rush</span>
+              <span class="btn-sub-caption">Simulasi Kasus & Warna Urin</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Practice Tips Card -->
+        <div style="padding: 0 18px 14px;">
+          <div style="background:#FFFFFF; border-radius:var(--radius-lg); padding:16px; border:1.5px solid var(--border-light); font-size:12.5px; line-height:1.5; color:var(--text-secondary);">
+            <strong style="color:var(--primary-navy); display:block; margin-bottom:4px;">💡 Informasi Paket Soal:</strong>
+            Total tersedia <strong>60 soal pilihan ganda</strong> berkualitas tinggi yang dilengkapi pembahasan klinis lengkap. Setiap soal benar bernilai <strong>100 Pts</strong>.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 4: PROFILE (PROFIL & PENGATURAN) ================= -->
+      <div class="tab-page-container tab-view-pane" id="tab-pane-profile" style="display: none;">
+        
+        <div class="profile-content-body">
+
+          <!-- Avatar & User Info -->
+          <div class="profile-avatar-center-wrap">
+            <div class="profile-avatar-circle btn-bounce" id="profile-avatar-circle" title="Ketuk untuk ubah avatar">
+              <span id="profile-avatar-emoji">👨‍⚕️</span>
+              <div class="avatar-edit-badge">✏️</div>
+            </div>
+            <h3 class="profile-name-text" id="profile-display-name">dr. Naufal / Sarah</h3>
+            <span class="profile-role-pill" id="profile-display-role">Mahasiswa Kesehatan</span>
+            <span style="font-size: 11.5px; color: var(--text-muted);" id="profile-display-email">user.kygu@medical.id</span>
+          </div>
+
+          <!-- Data Pengguna & Target Minum Card -->
+          <div class="settings-section-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h4 class="settings-card-title" style="margin:0;">👤 Informasi Akun & Hidrasi</h4>
+              <button class="kygu-btn secondary-btn btn-bounce" id="btn-edit-profile" style="padding:4px 10px; font-size:11px;">Edit Data</button>
+            </div>
+            <div class="setting-row-item">
+              <span class="setting-main-label">Target Minum Harian</span>
+              <strong style="color:var(--secondary-orange); font-size:13.5px;" id="profile-display-target">2.000 ml (8 Gelas)</strong>
+            </div>
+            <div class="setting-row-item">
+              <span class="setting-main-label">Ukuran Gelas Standar</span>
+              <strong style="color:var(--primary-navy); font-size:13.5px;">250 ml / Gelas</strong>
+            </div>
+          </div>
+
+          <!-- PENGATURAN AUDIO & MUSIK (CENTER HUB - Menggantikan icon setting di Home) -->
+          <div class="settings-section-card">
+            <h4 class="settings-card-title">🎵 Pengaturan Suara & Musik Latar</h4>
+            
+            <!-- SFX Toggle -->
+            <div class="setting-row-item">
+              <div class="setting-label-group">
+                <span class="setting-main-label">Efek Suara Tombol (SFX)</span>
+                <span class="setting-hint-text">Suara tetesan air, kencing, & tombol kuis</span>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" id="toggle-sfx-switch" checked>
+                <span class="slider-knob"></span>
+              </label>
+            </div>
+
+            <!-- Backsound Toggle -->
+            <div class="setting-row-item">
+              <div class="setting-label-group">
+                <span class="setting-main-label">Musik Latar (Backsound)</span>
+                <span class="setting-hint-text">Audio relaksasi & fokus belajar</span>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" id="toggle-music-switch">
+                <span class="slider-knob"></span>
+              </label>
+            </div>
+
+            <!-- Track Selector -->
+            <div style="margin-top: 10px;">
+              <span class="setting-main-label" style="font-size: 12px;">Pilihan Musik Latar:</span>
+              <div class="audio-track-grid">
+                <button class="audio-track-btn active" data-track="water">💧 Calm Water Flow</button>
+                <button class="audio-track-btn" data-track="lofi">🎧 Study Lo-Fi</button>
+                <button class="audio-track-btn" data-track="piano">🎹 Ambient Piano</button>
+                <button class="audio-track-btn" data-track="none">🔇 Off / Hening</button>
+              </div>
+            </div>
+
+            <!-- Volume Slider -->
+            <div style="margin-top: 14px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px;">
+                <span class="setting-main-label">Volume Audio Master</span>
+                <span style="font-weight:700; color:var(--secondary-orange);" id="volume-pct-label">60%</span>
+              </div>
+              <input type="range" class="volume-range-slider" id="slider-volume" min="0" max="100" value="60" oninput="document.getElementById('volume-pct-label').innerText = this.value + '%';">
+            </div>
+          </div>
+
+          <!-- PENGATURAN NOTIFIKASI -->
+          <div class="settings-section-card">
+            <h4 class="settings-card-title">🔔 Pengingat Jadwal Minum</h4>
+            <div class="setting-row-item">
+              <div class="setting-label-group">
+                <span class="setting-main-label">Pengingat Berkala Harian</span>
+                <span class="setting-hint-text">Notifikasi jadwal minum jam 08, 11, 14, 17, 20</span>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" id="toggle-reminder-switch" checked onchange="alert(this.checked ? '🔔 Pengingat minum berkala diaktifkan!' : '🔕 Pengingat minum dinonaktifkan.');">
+                <span class="slider-knob"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- FAQ & PUSAT BANTUAN ACCORDION -->
+          <div class="settings-section-card">
+            <h4 class="settings-card-title">❓ Pusat Pertanyaan & Bantuan (FAQ)</h4>
+            <div class="faq-accordion-list" id="faq-accordion-list">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- MEDICAL DISCLAIMER -->
+          <div style="padding: 12px; background: #FEF2F2; border-radius: var(--radius-md); border: 1px solid #FECACA; font-size: 11px; color: #991B1B; line-height: 1.45;">
+            <strong>⚠️ Disclaimer Medis:</strong> Aplikasi KyGU (Know Your GU) dirancang khusus untuk sarana edukasi kesehatan dan pemantauan mandiri. Seluruh hasil perhitungan kalkulator dan interpretasi warna urin bukan pengganti diagnosis, resep, atau advis dokter profesional. Bila Anda mengalami gejala akut atau nyeri hebat, segera hubungi fasilitas medis terdekat.
+          </div>
+
+          <!-- LOGOUT BUTTON -->
+          <button class="btn-logout-danger btn-bounce" id="btn-logout">
+            🚪 Keluar dari Akun (Mode Tamu)
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- ================= PERSISTENT BOTTOM NAVIGATION BAR ================= -->
+    <nav class="bottom-nav-bar" id="bottom-nav-bar">
+      <button class="nav-tab-item active" data-tab="home">
+        <span class="nav-tab-icon">🏠</span>
+        <span class="nav-tab-label">Home</span>
+      </button>
+
+      <button class="nav-tab-item" data-tab="learn">
+        <span class="nav-tab-icon">📖</span>
+        <span class="nav-tab-label">Learn</span>
+      </button>
+
+      <button class="nav-tab-item" data-tab="practice">
+        <span class="nav-tab-icon">🎯</span>
+        <span class="nav-tab-label">Practice</span>
+      </button>
+
+      <button class="nav-tab-item" data-tab="profile">
+        <span class="nav-tab-icon">👤</span>
+        <span class="nav-tab-label">Profile</span>
+      </button>
+    </nav>
+
+  </div> <!-- End Smartphone Device Shell -->
+
+  <!-- ================= MODALS & DRAWERS ================= -->
+
+  <!-- 1. Modal: Log Minum + -->
+  <div class="modal-overlay-backdrop" id="modal-log-minum">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">💧 Catat Asupan Minum</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <p style="font-size:12.5px; color:var(--text-secondary); margin-bottom:14px;">
+          Pilih cepat takaran minuman Anda atau masukkan jumlah kustom:
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+          <button class="kygu-btn quick-water-btn btn-bounce" data-ml="100" style="background:#F1F5F9; color:var(--primary-navy); padding:12px;">
+            🥤 100 ml (Teguk Kecil)
+          </button>
+          <button class="kygu-btn quick-water-btn btn-bounce" data-ml="200" style="background:#F1F5F9; color:var(--primary-navy); padding:12px;">
+            🥛 200 ml (Gelas Sedang)
+          </button>
+          <button class="kygu-btn quick-water-btn btn-bounce" data-ml="250" style="background:var(--secondary-orange-light); border:1.5px solid var(--secondary-orange); color:var(--secondary-orange); padding:12px;">
+            🥛 250 ml (1 Gelas Normal)
+          </button>
+          <button class="kygu-btn quick-water-btn btn-bounce" data-ml="500" style="background:#F1F5F9; color:var(--primary-navy); padding:12px;">
+            🍶 500 ml (1 Botol)
+          </button>
+        </div>
+
+        <div style="border-top:1px solid var(--border-light); padding-top:14px;">
+          <label class="kygu-input-label">Atau Masukkan Volume Kustom (ml):</label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" class="kygu-text-input" id="custom-water-input" placeholder="Misal: 330" min="10" max="2000">
+            <button class="kygu-btn primary-btn btn-bounce" id="btn-custom-water" style="padding:0 18px; white-space:nowrap; background:var(--secondary-orange); color:#FFFFFF;">
+              Tambah
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Modal: Log Berkemih -->
+  <div class="modal-overlay-backdrop" id="modal-log-bak">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">🚽 Catat Buang Air Kecil (BAK)</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <p style="font-size:12.5px; color:var(--text-secondary); margin-bottom:14px;">
+          Catatan berkemih membantu dokter mendeteksi keluhan kandung kemih dan laju produksi urin.
+        </p>
+
+        <div class="kygu-input-group">
+          <label class="kygu-input-label">Estimasi Volume Urin:</label>
+          <select class="kygu-select" id="bak-volume-select">
+            <option value="Sedikit (±100 ml)">Sedikit (± 100 ml)</option>
+            <option value="Normal / Sedang (±250 ml)" selected>Normal / Sedang (± 250 ml)</option>
+            <option value="Banyak / Lampias (±400+ ml)">Banyak / Lampias (± 400+ ml)</option>
+          </select>
+        </div>
+
+        <div class="kygu-input-group">
+          <label class="kygu-input-label">Keluhan atau Gejala Sensasi:</label>
+          <select class="kygu-select" id="bak-complaint-select">
+            <option value="Normal & Nyaman" selected>Normal & Nyaman (Tanpa Keluhan)</option>
+            <option value="Urgensi (Mendesak)">Agak Mendesak (Urgensi)</option>
+            <option value="Nyeri / Perih (Disuria)">Nyeri / Perih Saat Kencing (Disuria)</option>
+            <option value="Aliran Terputus">Pancaran Lemah / Terputus-putus</option>
+          </select>
+        </div>
+
+        <button class="kygu-btn primary-btn btn-bounce" id="btn-submit-bak" style="width:100%; margin-top:10px; background:var(--secondary-orange); color:#FFFFFF; padding:13px;">
+          💾 Simpan Catatan Berkemih
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Modal: Cek Warna Urin -->
+  <div class="modal-overlay-backdrop" id="modal-cek-urin">
+    <div class="modal-dialog-card" style="max-height: 92vh;">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">🌈 Pengecekan Skala Warna Urin</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
+          Ketuk salah satu dari 6 skala warna urin di bawah untuk melihat interpretasi klinis dan saran tindakan:
+        </p>
+        <div class="urine-color-grid" id="urine-color-grid"></div>
+        <div id="urine-color-detail-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Modal: Calculators Hub -->
+  <div class="modal-overlay-backdrop" id="modal-calculators-hub">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">🧮 Menu Kalkulator Klinis GU</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll" style="display:flex; flex-direction:column; gap:12px;">
+        <button class="kygu-btn calc-hub-nav-btn btn-bounce" data-calc="calc-egfr" style="background:#F8FAFC; border:1.5px solid var(--border-light); padding:14px; text-align:left; justify-content:flex-start;">
+          <span style="font-size:24px;">🔬</span>
+          <div>
+            <strong style="color:var(--primary-navy); display:block;">1. Kalkulator eGFR (CKD-EPI)</strong>
+            <span style="font-size:11.5px; color:var(--text-secondary);">Hitung laju filtrasi glomerulus & staging fungsi ginjal</span>
+          </div>
+        </button>
+
+        <button class="kygu-btn calc-hub-nav-btn btn-bounce" data-calc="calc-output" style="background:#F8FAFC; border:1.5px solid var(--border-light); padding:14px; text-align:left; justify-content:flex-start;">
+          <span style="font-size:24px;">⏱️</span>
+          <div>
+            <strong style="color:var(--primary-navy); display:block;">2. Urine Output (ml/kgBB/jam)</strong>
+            <span style="font-size:11.5px; color:var(--text-secondary);">Deteksi Anuria, Oliguria, Normal, atau Poliuria</span>
+          </div>
+        </button>
+
+        <button class="kygu-btn calc-hub-nav-btn btn-bounce" data-calc="calc-fluid" style="background:#F8FAFC; border:1.5px solid var(--border-light); padding:14px; text-align:left; justify-content:flex-start;">
+          <span style="font-size:24px;">💧</span>
+          <div>
+            <strong style="color:var(--primary-navy); display:block;">3. Kebutuhan Cairan Harian</strong>
+            <span style="font-size:11.5px; color:var(--text-secondary);">Rumus Holliday-Segar & Standar Dewasa 30–35 ml/kg</span>
+          </div>
+        </button>
+
+        <button class="kygu-btn calc-hub-nav-btn btn-bounce" data-calc="calc-ipss" style="background:#F8FAFC; border:1.5px solid var(--border-light); padding:14px; text-align:left; justify-content:flex-start;">
+          <span style="font-size:24px;">📋</span>
+          <div>
+            <strong style="color:var(--primary-navy); display:block;">4. Skor Gejala Prostat (IPSS)</strong>
+            <span style="font-size:11.5px; color:var(--text-secondary);">Kuesioner klinis LUTS 7 pertanyaan + Quality of Life</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator 1: eGFR -->
+  <div class="modal-overlay-backdrop" id="modal-calc-egfr">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">🔬 Kalkulator eGFR (CKD-EPI)</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <form id="form-calc-egfr">
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Usia Pasien (Tahun):</label>
+            <input type="number" class="kygu-text-input" id="egfr-age" value="45" required min="18" max="110">
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Jenis Kelamin:</label>
+            <select class="kygu-select" id="egfr-gender">
+              <option value="male" selected>Laki-laki</option>
+              <option value="female">Perempuan</option>
+            </select>
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Berat Badan (kg) [Opsional untuk Cockcroft-Gault]:</label>
+            <input type="number" class="kygu-text-input" id="egfr-weight" value="65" step="0.5">
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Kreatinin Serum (mg/dL):</label>
+            <input type="number" class="kygu-text-input" id="egfr-scr" value="1.1" step="0.05" required>
+          </div>
+          <button type="submit" class="kygu-btn primary-btn btn-bounce" style="width:100%; background:var(--secondary-orange); color:#FFFFFF; padding:12px;">
+            Hitung LFG & Staging Ginjal
+          </button>
+        </form>
+        <div id="egfr-result-box" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator 2: Urine Output -->
+  <div class="modal-overlay-backdrop" id="modal-calc-output">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">⏱️ Laju Urine Output (ml/kg/jam)</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <form id="form-calc-output">
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Volume Urin Total (ml):</label>
+            <input type="number" class="kygu-text-input" id="output-volume" value="350" required min="0">
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Berat Badan Pasien (kg):</label>
+            <input type="number" class="kygu-text-input" id="output-weight" value="60" required min="1">
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Durasi Pengumpulan (Jam):</label>
+            <input type="number" class="kygu-text-input" id="output-hours" value="6" required min="0.5" step="0.5">
+          </div>
+          <button type="submit" class="kygu-btn primary-btn btn-bounce" style="width:100%; background:var(--secondary-orange); color:#FFFFFF; padding:12px;">
+            Hitung Laju & Klasifikasi Klinis
+          </button>
+        </form>
+        <div id="output-result-box" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator 3: Kebutuhan Cairan -->
+  <div class="modal-overlay-backdrop" id="modal-calc-fluid">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">💧 Kebutuhan Cairan Harian</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <form id="form-calc-fluid">
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Berat Badan (kg):</label>
+            <input type="number" class="kygu-text-input" id="fluid-weight" value="60" required min="5" max="250">
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Tingkat Aktivitas Fisik:</label>
+            <select class="kygu-select" id="fluid-activity">
+              <option value="ringan">Ringan (Duduk, kantoran)</option>
+              <option value="sedang" selected>Sedang (Aktif bergerak / berjalan)</option>
+              <option value="berat">Berat (Olahraga rutin / buruh fisik)</option>
+            </select>
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Suhu Lingkungan / Cuaca:</label>
+            <select class="kygu-select" id="fluid-weather">
+              <option value="normal" selected>Normal / Sejuk ber-AC</option>
+              <option value="panas">Panas Terik / Tropis Lembab</option>
+            </select>
+          </div>
+          <button type="submit" class="kygu-btn primary-btn btn-bounce" style="width:100%; background:var(--secondary-orange); color:#FFFFFF; padding:12px;">
+            Hitung Rekomendasi Cairan
+          </button>
+        </form>
+        <div id="fluid-result-box" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator 4: IPSS -->
+  <div class="modal-overlay-backdrop" id="modal-calc-ipss">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">📋 Skor Gejala Prostat (IPSS)</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <form id="form-calc-ipss">
+          <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
+            Jawab 7 pertanyaan mengenai pola kencing Anda dalam 1 bulan terakhir:
+          </p>
+          
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">1. Rasa kencing belum tuntas setelah BAK?</label>
+            <select class="kygu-select" id="ipss-q1">
+              <option value="0">0 - Tidak Pernah</option>
+              <option value="1">1 - Kurang dari 1 dari 5 kali</option>
+              <option value="2">2 - Kurang dari separuh waktu</option>
+              <option value="3">3 - Kira-kira separuh waktu</option>
+              <option value="4">4 - Lebih dari separuh waktu</option>
+              <option value="5">5 - Hampir selalu</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">2. Kencing kembali kurang dari 2 jam setelah selesai?</label>
+            <select class="kygu-select" id="ipss-q2">
+              <option value="0">0 - Tidak Pernah</option>
+              <option value="1">1 - Kurang dari 1 dari 5 kali</option>
+              <option value="2">2 - Kurang dari separuh waktu</option>
+              <option value="3">3 - Kira-kira separuh waktu</option>
+              <option value="4">4 - Lebih dari separuh waktu</option>
+              <option value="5">5 - Hampir selalu</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">3. Aliran urin terhenti dan memancar kembali (intermiten)?</label>
+            <select class="kygu-select" id="ipss-q3">
+              <option value="0">0 - Tidak Pernah</option>
+              <option value="1">1 - Kurang dari 1 dari 5 kali</option>
+              <option value="2">2 - Kurang dari separuh waktu</option>
+              <option value="3">3 - Kira-kira separuh waktu</option>
+              <option value="4">4 - Lebih dari separuh waktu</option>
+              <option value="5">5 - Hampir selalu</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">4. Sulit menahan kencing (urgensi)?</label>
+            <select class="kygu-select" id="ipss-q4">
+              <option value="0">0 - Tidak Pernah</option>
+              <option value="1">1 - Kurang dari 1 dari 5 kali</option>
+              <option value="2">2 - Kurang dari separuh waktu</option>
+              <option value="3">3 - Kira-kira separuh waktu</option>
+              <option value="4">4 - Lebih dari separuh waktu</option>
+              <option value="5">5 - Hampir selalu</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">5. Pancaran kencing lemah atau mengecil?</label>
+            <select class="kygu-select" id="ipss-q5">
+              <option value="0">0 - Tidak Pernah</option>
+              <option value="1">1 - Kurang dari 1 dari 5 kali</option>
+              <option value="2">2 - Kurang dari separuh waktu</option>
+              <option value="3">3 - Kira-kira separuh waktu</option>
+              <option value="4">4 - Lebih dari separuh waktu</option>
+              <option value="5">5 - Hampir selalu</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">6. Harus mengejan untuk mulai kencing?</label>
+            <select class="kygu-select" id="ipss-q6">
+              <option value="0">0 - Tidak Pernah</option>
+              <option value="1">1 - Kurang dari 1 dari 5 kali</option>
+              <option value="2">2 - Kurang dari separuh waktu</option>
+              <option value="3">3 - Kira-kira separuh waktu</option>
+              <option value="4">4 - Lebih dari separuh waktu</option>
+              <option value="5">5 - Hampir selalu</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">7. Bangun malam hari untuk buang air kecil (nokturia)?</label>
+            <select class="kygu-select" id="ipss-q7">
+              <option value="0">0 - Tidak pernah</option>
+              <option value="1">1 - 1 kali</option>
+              <option value="2">2 - 2 kali</option>
+              <option value="3">3 - 3 kali</option>
+              <option value="4">4 - 4 kali</option>
+              <option value="5">5 - 5 kali atau lebih</option>
+            </select>
+          </div>
+
+          <div class="kygu-input-group" style="border-top:1px solid var(--border-light); padding-top:10px;">
+            <label class="kygu-input-label">8. Kualitas Hidup (QoL) terkait gejala kemih Anda:</label>
+            <select class="kygu-select" id="ipss-qol">
+              <option value="0">0 - Sangat Senang (Delighted)</option>
+              <option value="1">1 - Puas (Pleased)</option>
+              <option value="2">2 - Cukup Puas (Mostly Satisfied)</option>
+              <option value="3" selected>3 - Campuran Puas & Tidak (Mixed)</option>
+              <option value="4">4 - Agak Tidak Puas (Mostly Dissatisfied)</option>
+              <option value="5">5 - Tidak Bahagia (Unhappy)</option>
+              <option value="6">6 - Sangat Menderita (Terrible)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="kygu-btn primary-btn btn-bounce" style="width:100%; background:var(--secondary-orange); color:#FFFFFF; padding:12px;">
+            Analisis Skor Gejala IPSS
+          </button>
+        </form>
+        <div id="ipss-result-box" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Modal: 3D Hotspot Anatomical Info -->
+  <div class="modal-overlay-backdrop" id="modal-hotspot-info">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text" id="hotspot-modal-title">Hotspot Anatomi</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <div style="font-size:12px; font-weight:700; color:var(--secondary-orange); margin-bottom:6px;" id="hotspot-modal-sub"></div>
+        <p style="font-size:13.5px; line-height:1.5; color:var(--text-primary);" id="hotspot-modal-desc"></p>
+        <button class="kygu-btn primary-btn btn-bounce modal-close-x" style="width:100%; margin-top:16px; background:var(--primary-navy); color:#FFFFFF; padding:10px;">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Modal: Quiz Player -->
+  <div class="modal-overlay-backdrop" id="modal-quiz-player">
+    <div class="modal-dialog-card" style="max-height: 92vh;">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">📝 Sesi Latihan Soal Medis</h3>
+        <button class="modal-close-x" id="btn-exit-quiz">✕</button>
+      </div>
+      <div class="modal-body-scroll" id="quiz-player-content">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Modal: Mini-Games Viewport Container -->
+  <div class="modal-overlay-backdrop" id="modal-game-container">
+    <div class="modal-dialog-card" style="max-height: 94vh;">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text" id="game-modal-title">Mini-Game Medis</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll" id="game-viewport-box">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Modal: Edit Profil -->
+  <div class="modal-overlay-backdrop" id="modal-edit-profile">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">✏️ Edit Profil & Target</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <form id="form-edit-profile">
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Nama Pengguna:</label>
+            <input type="text" class="kygu-text-input" id="profile-edit-name" value="dr. Naufal / Sarah" required>
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Peran Pengguna:</label>
+            <select class="kygu-select" id="profile-edit-role">
+              <option value="Mahasiswa Kesehatan" selected>Mahasiswa Kesehatan / Kedokteran</option>
+              <option value="Masyarakat Umum">Masyarakat Umum</option>
+            </select>
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Target Minum Harian (ml):</label>
+            <input type="number" class="kygu-text-input" id="profile-edit-target" value="2000" min="500" max="6000" step="50" required>
+          </div>
+          <div class="kygu-input-group">
+            <label class="kygu-input-label">Ukuran Gelas Default (ml):</label>
+            <input type="number" class="kygu-text-input" id="profile-edit-cup" value="250" min="100" max="1000" step="50" required>
+          </div>
+          <button type="submit" class="kygu-btn primary-btn btn-bounce" style="width:100%; background:var(--secondary-orange); color:#FFFFFF; padding:12px;">
+            Simpan Perubahan
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Modal: Notifications Box -->
+  <div class="modal-overlay-backdrop" id="modal-notifications">
+    <div class="modal-dialog-card">
+      <div class="modal-header-bar">
+        <h3 class="modal-title-text">🔔 Kotak Pemberitahuan</h3>
+        <button class="modal-close-x">✕</button>
+      </div>
+      <div class="modal-body-scroll" id="notifications-list-container" style="display:flex; flex-direction:column; gap:10px;">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/audio.js"></script>
+  <script src="js/calculators.js"></script>
+  <script src="js/data-questions.js"></script>
+  <script src="js/data-content.js"></script>
+  <script src="js/3d-viewer.js"></script>
+  <script src="js/games.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('KyGU PWA ServiceWorker Registered:', reg.scope))
+          .catch(err => console.log('KyGU PWA ServiceWorker Failed:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>

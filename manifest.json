@@ -1,0 +1,21 @@
+{
+  "name": "KyGU - Know Your GU",
+  "short_name": "KyGU",
+  "description": "Aplikasi Edukasi Kesehatan & Pemantauan Mandiri Sistem Genitourinaria (GU) untuk Masyarakat dan Mahasiswa Kedokteran",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0A2E5C",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health", "education"],
+  "lang": "id"
+}
